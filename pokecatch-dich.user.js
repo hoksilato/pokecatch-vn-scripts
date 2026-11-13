@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokéCatch VN – Dịch bổ sung
-// @version      1.6
+// @version      1.6.1
 // @updateURL    https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-dich.meta.js
 // @downloadURL  https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-dich.user.js
 // @match        https://pokecatchvn.xyz/*
@@ -67,6 +67,7 @@
   document.head.append(menuStyle);
 
   function lookup(element, text) {
+    if (/^Nhà trẻ \((?:Â|Ấ)p trứng\)$/iu.test(text.normalize('NFC')) && element.closest('#tabs button, nav button[data-screen="pension"]')) return 'Nhà trẻ (Ấp trứng)';
     if (menuLabels.has(text) && element.closest('#tabs button')) return menuLabels.get(text);
     if (element.closest('.type[data-type]')) return types.get(text);
     if (text === 'NEW' && element.closest('.ot-new, nav button')) return 'MỚI';

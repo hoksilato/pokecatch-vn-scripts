@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokéCatch VN – Dịch bổ sung
-// @version      1.5
+// @version      1.5.1
 // @updateURL    https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-dich.meta.js
 // @downloadURL  https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-dich.user.js
 // @match        https://pokecatchvn.xyz/*
@@ -74,7 +74,7 @@
     const key = node.data.trim().replace(/\s+/g, ' ');
     if (!element || !key || element.closest(skip)) return;
     const replacement = lookup(element, key);
-    if (replacement) node.data = node.data.replace(node.data.trim(), replacement);
+    if (replacement && replacement !== key) node.data = node.data.replace(node.data.trim(), replacement);
   }
 
   function inspect(node) {

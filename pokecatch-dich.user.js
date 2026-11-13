@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokéCatch VN – Dịch bổ sung
-// @version      1.4
+// @version      1.5
 // @updateURL    https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-dich.meta.js
 // @downloadURL  https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-dich.user.js
 // @match        https://pokecatchvn.xyz/*
@@ -21,10 +21,10 @@
     ['Bắt toàn bộ Kanto Pokémon, Pokémon Huyền Thoại và Huyền Ảo included.', 'Bắt toàn bộ Pokémon vùng Kanto, kể cả Pokémon Huyền Thoại và Huyền Ảo.'],
     ['Giới hạn Lv.', 'Giới hạn cấp'],
     ['Cấp khuyến nghị Lv.', 'Cấp khuyến nghị'],
-    ['🏆 BXH Top Dex & Shiny', '🏆 Xếp hạng Pokédex và Pokémon khác màu'],
-    ['Hiện thẻ Pokédex mỗi khi bắt được loài mới (Shiny luôn hiện)', 'Hiện thẻ Pokédex mỗi khi bắt được loài mới (luôn hiện với Pokémon khác màu)'],
-    ['Hiệu ứng lấp lánh Shiny', 'Hiệu ứng cho Pokémon khác màu'],
-    ['Hiệu ứng sao lấp lánh quanh Pokémon Shiny', 'Hiệu ứng sao lấp lánh quanh Pokémon khác màu'],
+    ['🏆 BXH Top Dex & Shiny', '🏆 Xếp hạng Pokédex và Pokémon Shiny'],
+    ['Hiện thẻ Pokédex mỗi khi bắt được loài mới (Shiny luôn hiện)', 'Hiện thẻ Pokédex mỗi khi bắt được loài mới (luôn hiện với Pokémon Shiny)'],
+    ['Hiệu ứng lấp lánh Shiny', 'Hiệu ứng cho Pokémon Shiny'],
+    ['Hiệu ứng sao lấp lánh quanh Pokémon Shiny', 'Hiệu ứng sao lấp lánh quanh Pokémon Shiny'],
     ['Bạn bè của bạn sẽ luôn được ưu tiên xếp đầu danh sách đồng minh Raid.', 'Bạn bè luôn được ưu tiên xếp đầu danh sách đồng minh khi đấu trùm.'],
     ['⚖️ Luật cấp độ: Chuẩn Lv. 100 (Đồng bộ 2 bên)', '⚖️ Luật cấp độ: Cả hai bên cùng ở cấp 100'],
     ['⚖️ Luật cấp độ: Chuẩn Lv. 50 (Đồng bộ 2 bên)', '⚖️ Luật cấp độ: Cả hai bên cùng ở cấp 50'],
@@ -59,14 +59,13 @@
     if (element.closest('.type[data-type]')) return types.get(text);
     if (text === 'NEW' && element.closest('.ot-new, nav button')) return 'MỚI';
     if (text === 'Changelogs' && element.closest('button,[role="button"]')) return 'Lịch sử cập nhật';
-    if (text === 'Shiny' && element.closest('#screen-dex, #screen-team, #screen-pension') && element.closest('button')?.textContent.trim() === 'Shiny') return 'Khác màu';
     if (!element.closest('main,nav,button,select,[role="switch"],[role="dialog"],#poke-side-giftcode-btn')) return;
     const match = /^Thu phục toàn bộ Pokémon hệ (Electric|Ice|Fire)$/.exec(text);
     if (match) return 'Thu phục toàn bộ Pokémon hệ ' + types.get(match[1]);
     const shiny = /^(Sở hữu (?:10|50) Pokémon) Shiny\.$/.exec(text);
-    if (shiny) return shiny[1] + ' khác màu.';
+    if (shiny) return shiny[1] + ' Shiny.';
     const raid = /^Chiến thắng (25|50) trận Raid Shiny\.$/.exec(text);
-    if (raid) return 'Thắng ' + raid[1] + ' trận đấu trùm Pokémon khác màu.';
+    if (raid) return 'Thắng ' + raid[1] + ' trận đấu trùm Pokémon Shiny.';
     return labels.get(text);
   }
 

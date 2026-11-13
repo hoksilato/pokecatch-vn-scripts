@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokéCatch VN – Dịch bổ sung
-// @version      1.5.1
+// @version      1.6
 // @updateURL    https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-dich.meta.js
 // @downloadURL  https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-dich.user.js
 // @match        https://pokecatchvn.xyz/*
@@ -55,7 +55,19 @@
   }));
   const skip = 'script,style,textarea,input,[contenteditable]:not([contenteditable="false"]),option:not([value])';
 
+  const menuLabels = new Map([
+    ['Nhà Trẻ (Ấp Trứng)', 'Nhà trẻ (Ấp trứng)'],
+    ['Tháp Chiến Đấu', 'Tháp chiến đấu'],
+    ['Hầm Ngầm', 'Hầm ngầm'],
+    ['Bảng Xếp Hạng', 'Bảng xếp hạng'],
+  ]);
+  // Keep active and inactive menu labels in the same case.
+  const menuStyle = document.createElement('style');
+  menuStyle.textContent = '#tabs button, #tabs button .l { text-transform: none !important; }';
+  document.head.append(menuStyle);
+
   function lookup(element, text) {
+    if (menuLabels.has(text) && element.closest('#tabs button')) return menuLabels.get(text);
     if (element.closest('.type[data-type]')) return types.get(text);
     if (text === 'NEW' && element.closest('.ot-new, nav button')) return 'MỚI';
     if (text === 'Changelogs' && element.closest('button,[role="button"]')) return 'Lịch sử cập nhật';

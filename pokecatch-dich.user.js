@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokéCatch VN – Dịch bổ sung
-// @version      1.3
+// @version      1.4
 // @updateURL    https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-dich.meta.js
 // @downloadURL  https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-dich.user.js
 // @match        https://pokecatchvn.xyz/*
@@ -85,9 +85,38 @@
     while (walker.nextNode()) translate(walker.currentNode);
   }
 
+  const socialSelector = 'button[aria-controls="nav-grp-social"] > .l';
+  const desktop = matchMedia('(hover: hover) and (pointer: fine)');
+  const measure = document.createElement('canvas').getContext('2d');
+  let socialLabel;
+  function fitSocialLabel() {
+    if (!socialLabel || !measure) return;
+    const full = 'Cộng đồng & Trao đổi';
+    const css = getComputedStyle(socialLabel);
+    measure.font = css.font || [css.fontWeight, css.fontSize, css.fontFamily].join(' ');
+    const width = measure.measureText(full).width + (parseFloat(css.letterSpacing) || 0) * full.length;
+    const available = socialLabel.getBoundingClientRect().width;
+    const next = desktop.matches ? (available && width > available ? 'C.đồng & Trao đổi' : full) : 'Cộng đồng & Giao dịch';
+    if (socialLabel.textContent !== next) socialLabel.textContent = next;
+  }
+  const resize = new ResizeObserver(fitSocialLabel);
+  function bindSocialLabel() {
+    const current = document.querySelector(socialSelector);
+    if (current === socialLabel) return;
+    resize.disconnect();
+    socialLabel = current;
+    if (current) resize.observe(current.parentElement);
+    fitSocialLabel();
+  }
+  bindSocialLabel();
+  desktop.addEventListener('change', fitSocialLabel);
+  document.fonts.addEventListener('loadingdone', fitSocialLabel);
+
   inspect(document.body);
   new MutationObserver(records => {
+    if (!socialLabel?.isConnected) bindSocialLabel();
     for (const record of records) {
+      if (socialLabel && socialLabel.contains(record.target)) fitSocialLabel();
       if (record.type === 'characterData') translate(record.target);
       else for (const added of record.addedNodes) inspect(added);
     }

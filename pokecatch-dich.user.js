@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokéCatch VN – Dịch bổ sung
-// @version      1.6.1
+// @version      1.7
 // @updateURL    https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-dich.meta.js
 // @downloadURL  https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-dich.user.js
 // @match        https://pokecatchvn.xyz/*
@@ -63,7 +63,15 @@
   ]);
   // Keep active and inactive menu labels in the same case.
   const menuStyle = document.createElement('style');
-  menuStyle.textContent = '#tabs button, #tabs button .l { text-transform: none !important; }';
+  menuStyle.textContent = `
+    #tabs button, #tabs button .l { text-transform: none !important; }
+    .ti-menu .ti-row > .ti-cl-btn {
+      flex: 0 0 auto;
+      width: max-content;
+      white-space: nowrap;
+      padding-inline: clamp(6px, 2vw, 16px);
+    }
+  `;
   document.head.append(menuStyle);
 
   function lookup(element, text) {

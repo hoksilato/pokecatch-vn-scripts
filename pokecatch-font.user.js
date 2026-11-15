@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokéCatch VN – Font tiếng Việt
-// @version      2.1
+// @version      2.2
 // @updateURL    https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-font.meta.js
 // @downloadURL  https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-font.user.js
 // @match        https://pokecatchvn.xyz/*
@@ -118,6 +118,75 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       button, input, select, textarea, summary, li, dt, dd, th, td, legend, output):not([class~="material-icons"]):not([class~="material-symbols-outlined"]) {
       font-family: 'Pixel Viet 10', system-ui, sans-serif !important;
     }
+    /* Do not size the header from the measured sticky offset (resize feedback). */
+    #topbar {
+      height: auto;
+      min-height: 60px;
+      box-sizing: border-box;
+    }
+    /* Keep tablet actions in flow when the Vietnamese labels need another row. */
+    @media (max-width: 1199px) {
+      #topbar {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 8px;
+        padding-block: 6px;
+      }
+      #topbar > .tb-sep { display: none; }
+      #topbar > .tb-acts {
+        position: static;
+        display: flex;
+        flex: 0 1 auto;
+        flex-wrap: wrap;
+        min-width: 0;
+        max-width: 100%;
+        gap: 8px;
+        margin-inline-start: auto;
+      }
+      #topbar > .tb-acts > * { flex-shrink: 0; }
+      #topbar #save-btn {
+        width: 44px;
+        min-width: 44px;
+        height: 44px;
+        padding: 0;
+      }
+      /* Keep the original button, accessible name and live status dot. */
+      #topbar #save-btn > .l { display: none; }
+      #topbar .tb-don {
+        width: auto;
+        padding-inline: 8px;
+        white-space: nowrap;
+      }
+    }
+    @media (max-width: 640px) {
+      #topbar { min-height: 56px; }
+    }
   `;
   document.head.append(style);
+
+  // Sidebar, news and PC panels use this offset for their sticky positions.
+  // Measure the real height after wrapping/font loading, including on rotation.
+  let topbar;
+  let lastHeight = 0;
+  const headerResize = new ResizeObserver(() => {
+    if (!topbar?.isConnected) return;
+    const height = Math.ceil(topbar.getBoundingClientRect().height);
+    if (height > 0 && height !== lastHeight) {
+      lastHeight = height;
+      document.documentElement.style.setProperty('--topbar-h', `${height}px`);
+    }
+  });
+  function bindTopbar() {
+    const current = document.getElementById('topbar');
+    if (current === topbar) return;
+    headerResize.disconnect();
+    topbar = current;
+    lastHeight = 0;
+    if (topbar) headerResize.observe(topbar);
+  }
+  bindTopbar();
+  // The game's boot loader can mount #app after document-end.
+  new MutationObserver(() => {
+    if (!topbar?.isConnected) bindTopbar();
+  }).observe(document.body, { childList: true, subtree: true });
 })();

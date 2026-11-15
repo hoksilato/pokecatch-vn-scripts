@@ -4,7 +4,7 @@ Hai userscript tùy chỉnh giao diện của [PokéCatch VN](https://pokecatchv
 
 | Script | Công dụng |
 | --- | --- |
-| [Cài font tiếng Việt](https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-font.user.js) | Dùng Pixel Viet 10, bản bổ sung ký tự tiếng Việt cho Jersey 10. Font nhúng sẵn trong script và áp dụng cho giao diện, nút bấm và popup. |
+| [Cài font tiếng Việt](https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-font.user.js) | Dùng Pixel Viet 10, bản bổ sung ký tự tiếng Việt cho Jersey 10. Font nhúng sẵn trong script và áp dụng cho giao diện, nút bấm và popup. Từ v2.2, header tự xuống hàng khi thiếu chỗ; nút lưu trên mobile/tablet chỉ hiện icon đĩa và chấm trạng thái. |
 | [Cài bản dịch bổ sung](https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-dich.user.js) | Dịch các nhãn và câu đã đối chiếu trong game bằng từ điển cục bộ. Ví dụ, nhãn hệ Water thành Nước, còn tên chiêu Waterfall được giữ nguyên. |
 
 ## Chrome trên PC và MacBook
@@ -26,6 +26,7 @@ Hai userscript tùy chỉnh giao diện của [PokéCatch VN](https://pokecatchv
 
 - **Font:** Trên màn hình mở đầu, nhìn chữ **Ơ** trong **CÁCH CHƠI** và **Ụ** trong **TIẾP TỤC**. Các chữ có dấu phải cùng nét pixel với chữ bên cạnh.
 - **Bản dịch:** Vào **Đội hình / Kho PC** và xem nhãn hệ của Pokémon. Ví dụ, Charizard có nhãn **Lửa** và **Bay**.
+- **Header (font v2.2):** Trên iPad mini 6 dọc, các cụm nút không đè lên nhau hoặc nội dung game. Nút lưu vẫn bấm được và giữ chấm trạng thái của game; chỉ ẩn chữ ở chiều rộng dưới 1200px. Xoay ngang rồi trở lại chiều dọc để kiểm tra vị trí các vùng sticky được cập nhật.
 - Nếu không thấy script trong danh sách trên trang game, kiểm tra lại tên miền, thư mục Userscripts, quyền truy cập của tiện ích và chế độ duyệt web đang dùng. Sau khi đổi quyền hoặc bật script, tải lại tab.
 
 ## Phát hành bản mới

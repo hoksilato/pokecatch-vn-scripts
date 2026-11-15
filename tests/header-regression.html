@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="vi">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vietnamese Support button regression</title>
+<style>
+  body { margin: 16px; background: #171923; color: #eef; }
+  .topbar, .tb-acts { display: flex; align-items: center; gap: 8px; }
+  .topbar { padding: 6px; border: 1px solid #889; }
+  button { box-sizing: border-box; height: 40px; padding: 0 12px; }
+  .tb-save { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+  .tb-save > .l { display: inline; }
+  output { display: block; margin-top: 16px; white-space: pre-wrap; }
+</style>
+<header class="topbar" id="topbar">
+  <div class="tb-acts">
+    <span id="tb-online">988</span>
+    <!-- Actual Vietnamese-game classes: this is deliberately NOT .tb-don. -->
+    <button class="tb-save side-don" id="support-btn" title="Ủng hộ dự án" aria-label="Ủng hộ dự án"><span>❤️</span><span class="l">Ủng hộ</span></button>
+    <button class="tb-save" id="save-btn" aria-label="Lưu game"><span>💾</span><span class="l">Lưu game</span><i class="dot"></i></button>
+    <button class="side-opt side-gear" id="options-btn" aria-label="Tùy chọn">⚙</button>
+  </div>
+</header>
+<output id="result">Running…</output>
+<script>
+  window.supportClicks = 0;
+  window.originalSupport = document.getElementById('support-btn');
+  window.originalSupport.onclick = () => window.supportClicks++;
+</script>
+<script src="../pokecatch-font.user.js"></script>
+<script>
+  (async () => {
+    const result = document.getElementById('result');
+    const passed = [];
+    const check = (condition, message) => {
+      if (!condition) throw new Error(message);
+      passed.push('PASS: ' + message);
+    };
+    const settled = () => new Promise(resolve => setTimeout(resolve, 0));
+    const verify = (button, description) => {
+      check(button.previousElementSibling?.id === 'options-btn', description + ': after Settings');
+      check(getComputedStyle(button.querySelector('.l')).display === 'none', description + ': hidden label');
+      const rect = button.getBoundingClientRect();
+      check(rect.width === 44 && rect.height === 44, description + ': 44×44 target');
+      check(button.getAttribute('aria-label')?.trim(), description + ': accessible name');
+    };
+    try {
+      await document.fonts.ready;
+      await settled();
+      verify(document.getElementById('support-btn'), 'Vietnamese tb-save side-don');
+      check(document.getElementById('support-btn') === window.originalSupport, 'original node preserved');
+      window.originalSupport.click();
+      check(window.supportClicks === 1, 'original click handler preserved');
+      window.originalSupport.remove();
+      await settled();
+      const late = window.originalSupport.cloneNode(true);
+      late.removeAttribute('aria-label');
+      late.onclick = () => window.supportClicks++;
+      document.getElementById('tb-online').after(late);
+      await settled();
+      verify(late, 'late Vietnamese button without aria-label');
+      late.click();
+      check(window.supportClicks === 2, 'late click handler preserved');
+      const header = document.getElementById('topbar');
+      header.replaceWith(header.cloneNode(true));
+      await settled();
+      verify(document.getElementById('support-btn'), 'replaced header');
+      const upstream = document.getElementById('support-btn');
+      upstream.className = 'tb-don';
+      document.getElementById('tb-online').after(upstream);
+      await settled();
+      verify(upstream, 'upstream tb-don variant');
+      result.textContent = passed.join('\n');
+      result.dataset.status = 'passed';
+    } catch (error) {
+      result.textContent = passed.join('\n') + '\nFAIL: ' + error.message;
+      result.dataset.status = 'failed';
+    }
+  })();
+</script>
+</html>

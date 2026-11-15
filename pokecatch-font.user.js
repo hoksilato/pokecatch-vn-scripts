@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokéCatch VN – Font tiếng Việt
-// @version      2.3
+// @version      2.4
 // @updateURL    https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-font.meta.js
 // @downloadURL  https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-font.user.js
 // @match        https://pokecatchvn.xyz/*
@@ -105,6 +105,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 */
 (() => {
   const style = document.createElement('style');
+  style.id = 'pokecatch-vn-font-style';
+  style.dataset.version = '2.4';
   style.textContent = `
     @font-face {
       font-family: 'Pixel Viet 10';
@@ -125,14 +127,14 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       box-sizing: border-box;
     }
     /* Keep Support compact on every screen, preserving the game's heart icon. */
-    #topbar .tb-don {
+    #topbar #support-btn {
       flex: 0 0 44px;
       width: 44px;
       min-width: 44px;
       height: 44px;
       padding: 0;
     }
-    #topbar .tb-don > .l { display: none; }
+    #topbar #support-btn > .l { display: none; }
     /* Keep tablet actions in flow when the Vietnamese labels need another row. */
     @media (max-width: 1199px) {
       #topbar {
@@ -190,7 +192,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   }
   bindTopbar();
   function placeSupportButton() {
-    const support = topbar?.querySelector('.tb-acts > .tb-don');
+    const support = topbar?.querySelector('#support-btn');
     const settings = topbar?.querySelector('#options-btn');
     if (!support || !settings || support.parentElement !== settings.parentElement) return;
     // Moving the existing node also keeps keyboard order and click handlers intact.

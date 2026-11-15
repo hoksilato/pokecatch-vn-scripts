@@ -27,10 +27,12 @@ Hai userscript tùy chỉnh giao diện của [PokéCatch VN](https://pokecatchv
 - **Font:** Trên màn hình mở đầu, nhìn chữ **Ơ** trong **CÁCH CHƠI** và **Ụ** trong **TIẾP TỤC**. Các chữ có dấu phải cùng nét pixel với chữ bên cạnh.
 - **Bản dịch:** Vào **Đội hình / Kho PC** và xem nhãn hệ của Pokémon. Ví dụ, Charizard có nhãn **Lửa** và **Bay**.
 - **Header (font v2.2):** Trên iPad mini 6 dọc, các cụm nút không đè lên nhau hoặc nội dung game. Nút lưu vẫn bấm được và giữ chấm trạng thái của game; chỉ ẩn chữ ở chiều rộng dưới 1200px. Xoay ngang rồi trở lại chiều dọc để kiểm tra vị trí các vùng sticky được cập nhật.
-- **Ủng hộ (font v2.3):** Nút chỉ hiện icon trái tim và nằm ngay sau Settings trên mọi kích thước màn hình, giữ tên truy cập cho trình đọc màn hình. Header ưu tiên một hàng khi đủ chỗ và vẫn xuống hàng nếu màn hình quá hẹp.
+- **Ủng hộ (font v2.4):** Nút chỉ hiện icon trái tim và nằm ngay sau Settings trên mọi kích thước màn hình, giữ tên truy cập cho trình đọc màn hình. Header ưu tiên một hàng khi đủ chỗ và vẫn xuống hàng nếu màn hình quá hẹp. v2.4 sửa selector để nhận đúng nút `#support-btn` của bản Việt (`tb-save side-don`); v2.3 đã dùng nhầm class của bản gốc.
 - Nếu không thấy script trong danh sách trên trang game, kiểm tra lại tên miền, thư mục Userscripts, quyền truy cập của tiện ích và chế độ duyệt web đang dùng. Sau khi đổi quyền hoặc bật script, tải lại tab.
 
 ## Phát hành bản mới
+
+Trước khi phát hành thay đổi header, mở `tests/header-regression.html` trên trình duyệt (trực tiếp hoặc qua server tĩnh). Tất cả dòng phải hiện `PASS`; fixture kiểm tra đúng class `tb-save side-don` của game Việt, nút tải muộn, handler, tên truy cập và vị trí sau Settings. Fixture này kiểm tra cấu trúc nút; vẫn cần kiểm tra bố cục bằng CSS/game thực tế trên thiết bị.
 
 Giữ nguyên tên file và URL trên nhánh `main`. Tăng `@version` của script được sửa và sao chép nguyên khối metadata đầu file `.user.js` sang file `.meta.js` tương ứng trong cùng commit. Tiện ích dùng `@updateURL` để kiểm tra phiên bản và `@downloadURL` để tải script.
 

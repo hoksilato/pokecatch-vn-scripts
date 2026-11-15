@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokéCatch VN – Dịch bổ sung
-// @version      1.7
+// @version      1.8
 // @updateURL    https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-dich.meta.js
 // @downloadURL  https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-dich.user.js
 // @match        https://pokecatchvn.xyz/*
@@ -61,6 +61,13 @@
     ['Hầm Ngầm', 'Hầm ngầm'],
     ['Bảng Xếp Hạng', 'Bảng xếp hạng'],
   ]);
+  const sidebarLabels = new Map([
+    ['map', 'Tiến độ'],
+    ['team', 'Đội hình'],
+    ['pokedex', 'Pokédex'],
+    ['nav-grp-activities', 'Hoạt động'],
+    ['nav-grp-social', 'Cộng đồng'],
+  ]);
   // Keep active and inactive menu labels in the same case.
   const menuStyle = document.createElement('style');
   menuStyle.textContent = `
@@ -75,6 +82,13 @@
   document.head.append(menuStyle);
 
   function lookup(element, text) {
+    // Only outer sidebar labels; leave nested menu items, icons and badges alone.
+    const sidebarLabel = element.closest('#tabs > button > .l, #tabs > .nav-grp > button > .l');
+    if (sidebarLabel) {
+      const button = sidebarLabel.parentElement;
+      const replacement = sidebarLabels.get(button.getAttribute('data-screen') || button.getAttribute('aria-controls'));
+      if (replacement) return replacement;
+    }
     if (/^Nhà trẻ \((?:Â|Ấ)p trứng\)$/iu.test(text.normalize('NFC')) && element.closest('#tabs button, nav button[data-screen="pension"]')) return 'Nhà trẻ (Ấp trứng)';
     if (menuLabels.has(text) && element.closest('#tabs button')) return menuLabels.get(text);
     if (element.closest('.type[data-type]')) return types.get(text);
@@ -105,38 +119,9 @@
     while (walker.nextNode()) translate(walker.currentNode);
   }
 
-  const socialSelector = 'button[aria-controls="nav-grp-social"] > .l';
-  const desktop = matchMedia('(hover: hover) and (pointer: fine)');
-  const measure = document.createElement('canvas').getContext('2d');
-  let socialLabel;
-  function fitSocialLabel() {
-    if (!socialLabel || !measure) return;
-    const full = 'Cộng đồng & Trao đổi';
-    const css = getComputedStyle(socialLabel);
-    measure.font = css.font || [css.fontWeight, css.fontSize, css.fontFamily].join(' ');
-    const width = measure.measureText(full).width + (parseFloat(css.letterSpacing) || 0) * full.length;
-    const available = socialLabel.getBoundingClientRect().width;
-    const next = desktop.matches ? (available && width > available ? 'C.đồng & Trao đổi' : full) : 'Cộng đồng & Giao dịch';
-    if (socialLabel.textContent !== next) socialLabel.textContent = next;
-  }
-  const resize = new ResizeObserver(fitSocialLabel);
-  function bindSocialLabel() {
-    const current = document.querySelector(socialSelector);
-    if (current === socialLabel) return;
-    resize.disconnect();
-    socialLabel = current;
-    if (current) resize.observe(current.parentElement);
-    fitSocialLabel();
-  }
-  bindSocialLabel();
-  desktop.addEventListener('change', fitSocialLabel);
-  document.fonts.addEventListener('loadingdone', fitSocialLabel);
-
   inspect(document.body);
   new MutationObserver(records => {
-    if (!socialLabel?.isConnected) bindSocialLabel();
     for (const record of records) {
-      if (socialLabel && socialLabel.contains(record.target)) fitSocialLabel();
       if (record.type === 'characterData') translate(record.target);
       else for (const added of record.addedNodes) inspect(added);
     }

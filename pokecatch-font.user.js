@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokéCatch VN – Font tiếng Việt
-// @version      2.2
+// @version      2.3
 // @updateURL    https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-font.meta.js
 // @downloadURL  https://raw.githubusercontent.com/hoksilato/pokecatch-vn-scripts/main/pokecatch-font.user.js
 // @match        https://pokecatchvn.xyz/*
@@ -124,6 +124,15 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       min-height: 60px;
       box-sizing: border-box;
     }
+    /* Keep Support compact on every screen, preserving the game's heart icon. */
+    #topbar .tb-don {
+      flex: 0 0 44px;
+      width: 44px;
+      min-width: 44px;
+      height: 44px;
+      padding: 0;
+    }
+    #topbar .tb-don > .l { display: none; }
     /* Keep tablet actions in flow when the Vietnamese labels need another row. */
     @media (max-width: 1199px) {
       #topbar {
@@ -152,11 +161,6 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       }
       /* Keep the original button, accessible name and live status dot. */
       #topbar #save-btn > .l { display: none; }
-      #topbar .tb-don {
-        width: auto;
-        padding-inline: 8px;
-        white-space: nowrap;
-      }
     }
     @media (max-width: 640px) {
       #topbar { min-height: 56px; }
@@ -185,8 +189,20 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     if (topbar) headerResize.observe(topbar);
   }
   bindTopbar();
-  // The game's boot loader can mount #app after document-end.
+  function placeSupportButton() {
+    const support = topbar?.querySelector('.tb-acts > .tb-don');
+    const settings = topbar?.querySelector('#options-btn');
+    if (!support || !settings || support.parentElement !== settings.parentElement) return;
+    // Moving the existing node also keeps keyboard order and click handlers intact.
+    if (settings.nextElementSibling !== support) settings.after(support);
+    if (!support.getAttribute('aria-label')?.trim()) {
+      support.setAttribute('aria-label', support.title || support.querySelector('.l')?.textContent.trim() || 'Ủng hộ');
+    }
+  }
+  placeSupportButton();
+  // The boot loader and Support feature can mount their controls asynchronously.
   new MutationObserver(() => {
     if (!topbar?.isConnected) bindTopbar();
+    placeSupportButton();
   }).observe(document.body, { childList: true, subtree: true });
 })();

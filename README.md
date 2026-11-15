@@ -27,6 +27,7 @@ Hai userscript tùy chỉnh giao diện của [PokéCatch VN](https://pokecatchv
 - **Font:** Trên màn hình mở đầu, nhìn chữ **Ơ** trong **CÁCH CHƠI** và **Ụ** trong **TIẾP TỤC**. Các chữ có dấu phải cùng nét pixel với chữ bên cạnh.
 - **Bản dịch:** Vào **Đội hình / Kho PC** và xem nhãn hệ của Pokémon. Ví dụ, Charizard có nhãn **Lửa** và **Bay**.
 - **Header (font v2.2):** Trên iPad mini 6 dọc, các cụm nút không đè lên nhau hoặc nội dung game. Nút lưu vẫn bấm được và giữ chấm trạng thái của game; chỉ ẩn chữ ở chiều rộng dưới 1200px. Xoay ngang rồi trở lại chiều dọc để kiểm tra vị trí các vùng sticky được cập nhật.
+- **Ủng hộ (font v2.3):** Nút chỉ hiện icon trái tim và nằm ngay sau Settings trên mọi kích thước màn hình, giữ tên truy cập cho trình đọc màn hình. Header ưu tiên một hàng khi đủ chỗ và vẫn xuống hàng nếu màn hình quá hẹp.
 - Nếu không thấy script trong danh sách trên trang game, kiểm tra lại tên miền, thư mục Userscripts, quyền truy cập của tiện ích và chế độ duyệt web đang dùng. Sau khi đổi quyền hoặc bật script, tải lại tab.
 
 ## Phát hành bản mới
